@@ -1,5 +1,6 @@
 import os,sys
 os.environ['NUMEXPR_MAX_THREADS'] = '16'
+import patch_read_video  # Patch torchvision.io.read_video for torchvision>=0.26
 import warnings
 warnings.filterwarnings("ignore",category=UserWarning)
 warnings.filterwarnings("ignore",category=FutureWarning)

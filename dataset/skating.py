@@ -52,7 +52,7 @@ class Skating(torch.utils.data.Dataset):
             seq_lens = [data['seq_len'] for data in self.dataset]
             hist, bins = np.histogram(seq_lens, bins='auto')
             if du.is_root_proc():
-                logger.info(list(bins.astype(np.int)))
+                logger.info(list(bins.astype(int)))
                 logger.info(list(hist))
 
         if self.mode=="train" and cfg.TRAINING_ALGO == 'classification':
