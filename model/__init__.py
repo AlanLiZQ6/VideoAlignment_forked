@@ -1,9 +1,7 @@
 import os
 import torch
 from natsort import natsorted
-from .transformer.transformer import CARL 
-from .conv.conv import Conv
-from .carl_transformer.transformer import TransformerModel as CARL_Transformer
+from .transformer.transformer import CARL
 from icecream import ic
 from utils import dist as du
 import torch.distributed as dist
@@ -46,10 +44,12 @@ def load_checkpoint(cfg,model,optimizer,name=None):
 
 def build_model(cfg):
     if cfg.args.carl:
+        from .carl_transformer.transformer import TransformerModel as CARL_Transformer
         return CARL_Transformer(cfg,test=False)
     elif cfg.MODEL.EMBEDDER_TYPE=='transformer':
         print("BUILDING TRANSFORMER")
         return CARL(cfg)
     else:
+        from .conv.conv import Conv
         print("BUILDING CONV")
         return Conv(cfg,cfg.MODEL.EMBEDDER_MODEL.EMBEDDING_SIZE,cfg.MODEL.EMBEDDER_MODEL.FC_DROPOUT_RATE,cfg.DATA.NUM_CONTEXTS)
