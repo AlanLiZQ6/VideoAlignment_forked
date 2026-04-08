@@ -343,16 +343,14 @@ def create_ssl_data_augment(cfg, augment):
             'target_width': cfg.IMAGE_SIZE
         }))
         ops.append(RandomOp(flip, 0.5))
-        if cfg.AUGMENTATION.COLOR_JITTER:
-            ops.append(RandomOp(color_jitter, 0.8, **{
-                'img_brightness': 0.8*s,
-                'img_contrast': 0.8*s,
-                'img_saturation': 0.8*s,
-                'img_hue': 0.2*s,
-                'img_blur': 0.0 if cfg.DATASETS[0] == "finegym" else 0.5*s,
-            }))
-        if cfg.AUGMENTATION.GRAYSCALE:
-            ops.append(RandomOp(grayscale, 0.2))
+        ops.append(RandomOp(color_jitter, 0.8, **{
+            'img_brightness': 0.8*s,
+            'img_contrast': 0.8*s,
+            'img_saturation': 0.8*s,
+            'img_hue': 0.2*s,
+            'img_blur': 0.0 if cfg.DATASETS[0] == "finegym" else 0.5*s,
+        }))
+        ops.append(RandomOp(grayscale, 0.2))
     else:
         ops.append(AugmentOp(uniform_crop, **{
             'size': cfg.IMAGE_SIZE
@@ -360,11 +358,10 @@ def create_ssl_data_augment(cfg, augment):
     ops.append(AugmentOp(resize, **{
         'size': cfg.IMAGE_SIZE
     }))
-    if cfg.AUGMENTATION.COLOR_NORM:
-        ops.append(AugmentOp(color_normalization, **{
-            "mean" : [0.485, 0.456, 0.406],
-            "stddev": [0.229, 0.224, 0.225]
-        }))
+    ops.append(AugmentOp(color_normalization, **{
+        "mean" : [0.485, 0.456, 0.406],
+        "stddev": [0.229, 0.224, 0.225]
+    }))
     b4_norm = ops[:-1]
 
     return ComposeOp(ops), ComposeOp(b4_norm)
@@ -404,11 +401,10 @@ def create_data_augment(cfg, augment):
     ops.append(AugmentOp(resize, **{
         'size': cfg.IMAGE_SIZE
     }))
-    if cfg.AUGMENTATION.COLOR_NORM:
-        ops.append(AugmentOp(color_normalization, **{
-            "mean" : [0.485, 0.456, 0.406],
-            "stddev": [0.229, 0.224, 0.225]
-        }))
+    ops.append(AugmentOp(color_normalization, **{
+        "mean" : [0.485, 0.456, 0.406],
+        "stddev": [0.229, 0.224, 0.225]
+    }))
     b4_norm = ops[:-1]
 
     return ComposeOp(ops), ComposeOp(b4_norm)
