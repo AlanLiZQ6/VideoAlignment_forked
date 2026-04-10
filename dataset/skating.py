@@ -94,8 +94,7 @@ class Skating(torch.utils.data.Dataset):
             if hasattr(self.cfg.DATA,'SKELETON_VIDEO') and self.cfg.DATA.SKELETON_VIDEO:
                 video_file = os.path.join(self.cfg.PATH_TO_DATASET, self.dataset[index]["skeleton_heatmap_file"])
             else:
-                # video_file = os.path.join(self.cfg.PATH_TO_DATASET, self.dataset[index][video_file_field])
-                video_file = self.dataset[index][video_file_field]
+                video_file = os.path.join(self.cfg.PATH_TO_DATASET, self.dataset[index][video_file_field])
             video, _, info = read_video(video_file, pts_unit='sec')
         
         video = video.permute(0,3,1,2).float() / 255.0 # T H W C -> T C H W, [0,1] tensor
