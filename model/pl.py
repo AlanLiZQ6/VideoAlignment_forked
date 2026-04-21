@@ -2,9 +2,7 @@ import torch
 from torch import nn,utils
 import lightning as L
 from lightning.pytorch import seed_everything
-from transformer.transformer import CARL
-import sys
-sys.path.append("/home/c1l1mo/projects/VideoAlignment/")
+from model.transformer.transformer import CARL
 from loss.scl import SCL
 import yaml
 from easydict import EasyDict as Edict

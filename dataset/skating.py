@@ -4,7 +4,17 @@ import math
 import pickle
 import torch
 import torch.nn.functional as F
-from torchvision.io import read_video
+try:
+    from torchvision.io import read_video
+except ImportError:
+    import decord
+    decord.bridge.set_bridge('torch')
+    def read_video(path, pts_unit='sec'):
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"Video not found: {path}")
+        vr = decord.VideoReader(path)
+        frames = vr.get_batch(list(range(len(vr))))  # (T, H, W, C) uint8 torch tensor
+        return frames, None, {}
 import numpy as np
 import json
 from icecream import ic
@@ -94,9 +104,9 @@ class Skating(torch.utils.data.Dataset):
             if hasattr(self.cfg.DATA,'SKELETON_VIDEO') and self.cfg.DATA.SKELETON_VIDEO:
                 video_file = os.path.join(self.cfg.PATH_TO_DATASET, self.dataset[index]["skeleton_heatmap_file"])
             else:
-                # video_file = os.path.join(self.cfg.PATH_TO_DATASET, self.dataset[index][video_file_field])
-                video_file = self.dataset[index][video_file_field]
+                video_file = os.path.join(self.cfg.PATH_TO_DATASET, self.dataset[index][video_file_field])
             video, _, info = read_video(video_file, pts_unit='sec')
+            assert video.numel() > 0, f"Empty video read: {video_file}"
         
         video = video.permute(0,3,1,2).float() / 255.0 # T H W C -> T C H W, [0,1] tensor
 

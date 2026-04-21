@@ -1,7 +1,5 @@
-import sys
-sys.path.append('/home/c1l1mo/projects/VideoAlignment/model')
-from transformer.resnet50.resnet50 import ResNet50
-from CvT.convolutional_transformer import ConvolutionalTransformer
+from model.transformer.resnet50.resnet50 import ResNet50
+from model.CvT.convolutional_transformer import ConvolutionalTransformer
 import torch 
 import torch.nn as nn
 

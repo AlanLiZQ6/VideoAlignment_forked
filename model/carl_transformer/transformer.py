@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from carl_transformer.resnet_c2d import *
+from model.carl_transformer.resnet_c2d import *
 import sys
 from icecream import ic
 
@@ -425,7 +425,7 @@ class TransformerModel(nn.Module):
             mine_result = self.mine(ori_x,split=split)
             ic(torch.equal(mine_encoder_result,mine_result))
             ic(x,mine_result)
-        return x, curr_emb
+        return x
         return {"x_res":x_res,
                 "x_reshape":x_reshape,
                 "x_pooling":x_pooling,

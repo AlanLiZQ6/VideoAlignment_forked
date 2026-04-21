@@ -288,15 +288,16 @@ def main():
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s %(lineno)d: %(message)s', datefmt='%Y-%m-%d %H:%M:%S',filename=os.path.join(cfg.LOGDIR,'stdout.log'))
 
+    args.local_rank = int(os.environ.get("LOCAL_RANK", args.local_rank))
+    torch.cuda.set_device(args.local_rank)
     dist.init_process_group(backend='nccl', init_method='env://')
 
-    setup_seed(7)    
+    setup_seed(7)
     model = build_model(cfg)
-    torch.cuda.set_device(args.local_rank)
     model = model.cuda()
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
-    model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank], 
-            output_device=args.local_rank,find_unused_parameters=False)
+    model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank],
+            output_device=args.local_rank,find_unused_parameters=True)
 
     optimizer = construct_optimizer(model,cfg)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=cfg.TRAIN.MAX_EPOCHS + 1)
